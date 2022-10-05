@@ -1,5 +1,5 @@
- function fetchProducts(){
-    fetch("http://localhost:3000/api/products")
+ async function fetchProducts(){
+    await fetch("http://localhost:3000/api/products")
     .catch(function(error){
         console.log(error);
     })
