@@ -11,7 +11,7 @@
         const itemSection = document.querySelector(".items");
         console.log(datasucessresult);
 
-        for (let i=0;i<=datasucessresult.length;i++){
+        for (let i=0;i<datasucessresult.length;i++){
         itemSection.innerHTML +=
         `<a href="./product.html?id=${datasucessresult[i]._id}">
         <article>

@@ -34,7 +34,8 @@ async function fetchProductSelect(){
         const quantityInput = document.querySelector("#quantity");
         const addToCartButton = document.querySelector("#addToCart");    
         addToCartButton.onclick = () =>{
-            addToCart(quantityInput.value, colorSection.value) 
+            addToCart(quantityInput.value, colorSection.value); 
+            
         }
     
          
@@ -44,8 +45,9 @@ async function fetchProductSelect(){
 function addToCart(quantity,color){
        const newElements ={
                 id: id,
-                quantity: Number(quantity),
-                color: color
+                quantity: parseInt(quantity),
+                color: color,
+                
             }
             const storedData = localStorage.getItem("elementsCart");
             let cartElements;
@@ -57,6 +59,8 @@ function addToCart(quantity,color){
             }
             cartElements.push(newElements);
             localStorage.setItem("elementsCart",JSON.stringify(cartElements));
+            window.confirm("Produit ajouté dans la panier");
+            
 }
 fetchProductSelect();
 
