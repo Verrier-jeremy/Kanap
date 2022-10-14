@@ -47,6 +47,9 @@ async function displayCart() {
         // Déclaration de la variable articleCart en créant un article avec le parent elementCart
         let articleCart = document.createElement('article');
         articleCart.classList.add('cart__item');
+        articleCart.setAttribute("data-id", `${allCartWithInfo[i].id}`);
+        articleCart.setAttribute("data-color", `${allCartWithInfo[i].color}`);
+        console.log(articleCart);
         elementCart.appendChild(articleCart);
 
         // Déclaration de la variable imageDiv en créant une div avec le parent articleCart
@@ -65,6 +68,7 @@ async function displayCart() {
         globalDescriptionProduct.classList.add('cart__item__content');
         articleCart.appendChild(globalDescriptionProduct);
 
+        // Déclaration de la variable descriptionProduct en créant une div avec le parent globalDescriptionProduct
         let descriptionProduct = document.createElement('div');
         descriptionProduct.classList.add('cart__item__content__description');
         descriptionProduct.innerHTML += `<h2>${allCartWithInfo[i].name}</h2><p>${allCartWithInfo[i].color}</p><p>${allCartWithInfo[i].price} €</p>`;
@@ -87,19 +91,16 @@ async function displayCart() {
         deleteCartProduct.classList.add('cart__item__content__settings__delete');
         deleteCartProduct.innerHTML += `<p class="deleteItem">Supprimer</p>`;
         cartSetting.appendChild(deleteCartProduct);
-        
+
     }
-    
+
 
 }
 displayCart();
 
-/*let productDelete = document.querySelector('.cart__item__content__settings__delete');
-productDelete = productDelete.innerText;
-console.log(productDelete);
-productDelete.onclick = await function(){
-  console.log('product');  
-};*/
+
+
+
 
 
 
