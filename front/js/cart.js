@@ -5,7 +5,6 @@ if (allCart.length < 1) {
     emptyCart.innerText = 'Votre Panier est vide !';
 }
 else {
-    console.log(allCart.length);
     let allCartWithInfo = [];
 
     async function fetchProductInCart() {
@@ -78,7 +77,9 @@ else {
             // Déclaration de la variable descriptionProduct en créant une div avec le parent globalDescriptionProduct
             let descriptionProduct = document.createElement('div');
             descriptionProduct.classList.add('cart__item__content__description');
-            descriptionProduct.innerHTML += `<h2>${allCartWithInfo[i].name}</h2><p>${allCartWithInfo[i].color}</p><p>${allCartWithInfo[i].price} €</p>`;
+            descriptionProduct.innerHTML += `<h2>${allCartWithInfo[i].name}</h2>
+            <p>${allCartWithInfo[i].color}</p>
+            <p>${allCartWithInfo[i].price} €</p>`;
             globalDescriptionProduct.appendChild(descriptionProduct);
 
             // Déclaration de la variable cartSetting en créant une div avec le parent globalDescriptionProduct
@@ -86,12 +87,26 @@ else {
             cartSetting.classList.add('cart__item__content__settings');
             globalDescriptionProduct.appendChild(cartSetting);
 
-            // Déclaration de la variable inputQuantity en créant une input avec le parent cartSetting
-            let inputQuantity = document.createElement('div');
-            inputQuantity.classList.add('cart__item__content__settings__quantity');
-            inputQuantity.innerHTML += `<p>Qté : </p>
-            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${allCartWithInfo[i].quantity}">`;
-            cartSetting.appendChild(inputQuantity);
+            // Déclaration de la variable divQuantity en créant une div avec le parent cartSetting
+            let divQuantity = document.createElement('div');
+            divQuantity.classList.add('cart__item__content__settings__quantity');
+            cartSetting.appendChild(divQuantity);
+
+            // Déclaration de la variable paraQuantity en créant une input avec le parent divQuantity
+            let paraQuantity = document.createElement('p');
+            divQuantity.appendChild(paraQuantity);
+            paraQuantity.innerText = "Qte : ";
+
+            // Déclaration de la variable inputQuantity en créant une input avec le parent paraQuantity
+            let inputQuantity = document.createElement('input');
+            paraQuantity.appendChild(inputQuantity);
+            inputQuantity.classList.add('itemQuantity');
+            inputQuantity.setAttribute("type", "number");
+            inputQuantity.setAttribute("min", "1");
+            inputQuantity.setAttribute("max", "100");
+            inputQuantity.setAttribute("name", "itemQuantity");
+            inputQuantity.value = allCartWithInfo[i].quantity;
+
 
             // Déclaration de la variable inputQuantity en créant une input avec le parent cartSetting
             let deleteCartProduct = document.createElement('div');
@@ -113,20 +128,39 @@ else {
                 alert('Votre article a bien été supprimé.');
                 location.reload();
             })
-
         }
+        function modificationQuantity() {
+
+            let quantitySelected = document.querySelectorAll('.itemQuantity');
+            for (let j = 0; j < quantitySelected.length; j++) {
+                quantitySelected[j].addEventListener('change', (event) => {
+                    event.preventDefault();
+
+                    let initialQuantity = allCart[j].quantity;
+                    let idProduct = allCart[j].id;
+
+                    let quantitySelectedValue = quantitySelected[j];
+
+
+                    let differQuantity = allCart.find((element) => element.id == idProduct && element.quantitySelectedValue !== initialQuantity);
+                    differQuantity.quantity = quantitySelectedValue;
+                    allCart[j].quantity = differQuantity.quantity;
+                    console.log(differQuantity);
+                    localStorage.setItem("elementsCart", JSON.stringify(allCart));
+                    location.reload();
+                });
+            }
+        }
+
+
+        modificationQuantity();
     }
+
     displayCart();
+
+
+
 }
-
-
-
-
-
-
-
-
-
 
 
 
