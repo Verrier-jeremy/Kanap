@@ -44,6 +44,10 @@ else {
 
 
         for (let i = 0; i < allCartWithInfo.length; i++) {
+            const id = allCart[i].id;
+            const color = allCart[i].color;
+            const productQuantity = allCart[i].quantity;
+            const productPrice = allCartWithInfo[i].price;
 
             quantity += allCartWithInfo[i].quantity;
             price += allCartWithInfo[i].quantity * allCartWithInfo[i].price;
@@ -107,6 +111,18 @@ else {
             inputQuantity.setAttribute("name", "itemQuantity");
             inputQuantity.value = allCartWithInfo[i].quantity;
 
+            inputQuantity.addEventListener('change', (event) => {
+
+                let quantitySelectedValue = inputQuantity.value;
+                let indexProduct = allCart.findIndex(item => item.id == id && item.color == color)
+                let deltaQuantity = allCart[indexProduct].quantity - Number(quantitySelectedValue);
+                allCart[indexProduct].quantity = Number(quantitySelectedValue);
+                localStorage.setItem("elementsCart", JSON.stringify(allCart));
+                totalQuantity.innerText -= `${deltaQuantity}`;
+                totalPrice.innerText -= `${deltaQuantity} ` * productPrice;
+
+            });
+
 
             // Déclaration de la variable inputQuantity en créant une input avec le parent cartSetting
             let deleteCartProduct = document.createElement('div');
@@ -118,53 +134,136 @@ else {
             deleteProduct.classList.add('deleteItem');
             deleteProduct.innerText = 'supprimer';
             deleteCartProduct.appendChild(deleteProduct);
-            deleteProduct.addEventListener('click', (deleteProductToCart) => {
 
-                deleteProductToCart.preventDefault;
-                let deleteId = allCart[i].id;
-                let deleteColor = allCart[i].color;
-                allCart = allCart.filter(element => element.id != deleteId || element.color != deleteColor);
+            deleteProduct.addEventListener('click', () => {
+
+                let indexProduct = allCart.findIndex(item => item.id == id && item.color == color)
+
+                allCart.splice(indexProduct, 1);
+                allCartWithInfo.splice(indexProduct, 1);
                 localStorage.setItem('elementsCart', JSON.stringify(allCart));
                 alert('Votre article a bien été supprimé.');
-                location.reload();
+                articleCart.remove();
+                quantity -= productQuantity;
+                price -= productPrice * productQuantity;
+                totalQuantity -= `${quantity}`;
+                totalPrice.innerText = `${price}`;
             })
         }
-        function modificationQuantity() {
-
-            let quantitySelected = document.querySelectorAll('.itemQuantity');
-            for (let j = 0; j < quantitySelected.length; j++) {
-                quantitySelected[j].addEventListener('change', (event) => {
-                    event.preventDefault();
-
-                    let initialQuantity = allCart[j].quantity;
-                    let idProduct = allCart[j].id;
-
-                    let quantitySelectedValue = quantitySelected[j];
-
-
-                    let differQuantity = allCart.find((element) => element.id == idProduct && element.quantitySelectedValue !== initialQuantity);
-                    differQuantity.quantity = quantitySelectedValue;
-                    allCart[j].quantity = differQuantity.quantity;
-                    console.log(differQuantity);
-                    localStorage.setItem("elementsCart", JSON.stringify(allCart));
-                    location.reload();
-                });
-            }
-        }
-
-
-        modificationQuantity();
     }
 
     displayCart();
-
-
-
 }
 
 
+function getForm() {
+
+    // selection du formulaire
+    let form = document.querySelector('.cart__order__form');
+    console.log(form.firstName);
+
+    //selection du boutton de validation du formulaire
+    /*let validForm = document.getElementById('order');
+    let formOK = false;
+
+    //Creation de la condition que le boutton est cliquable après que toutes les données rentrées soient validées par les regexp
+    validForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (formOK) {
+            console.log("formulaire valid");
+        }
+    })*/
+
+    // Mise en place des différentes expressions régulières pour le formulaire
+    let charRegexp = new RegExp(`^[a-zA-Z ,.'-]+$`, 'g');
+    let emailRegexp = new RegExp(`^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$`, 'g');
+    let addressRegexp = new RegExp(`^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+$)`, 'g');
 
 
+    // test des differentes valeurs données dans le formulaire avec les Regexp
+    form.firstName.addEventListener('change', () => {
+        validationFirstNameRegexp(this);
+    });
+
+    form.lastName.addEventListener('change', () => {
+        validationLastNameRegexp(this);
+    });
+
+    form.address.addEventListener('change', () => {
+        validationaddressRegexp(this);
+    });
+
+    form.city.addEventListener('change', () => {
+        validationCityRegexp(this);
+    });
+
+    form.email.addEventListener('change', () => {
+        validationEmailRegexp(this);
+    });
+
+    const validationFirstNameRegexp = function (inputName) {
+        let inputTestFirstName = charRegexp.test(inputName.value);
+        if (inputTestFirstName) {
+            console.log('test validé');
+            console.log(inputTestFirstName);
+        }
+        else {
+            console.log(inputTestFirstName);
+        }
+        return inputTestFirstName;
+    }
+
+    const validationLastNameRegexp = function (input) {
+        let inputTestLastName = charRegexp.test(input.value);
+        if (inputTestLastName) {
+            console.log('test validé');
+            console.log(inputTestLastName);
+            return inputTestLastName;
+        }
+        else {
+            console.log(inputTestLastName);
+        }
+
+    }
+
+    // function validationaddressRegexp(input){
+    const validationaddressRegexp = function (input) {
+        let inputTestAddress = addressRegexp.test(input.value);
+        if (inputTestAddress) {
+            console.log('test validé');
+            console.log(inputTestAddress);
+            return inputTestAddress;
+        }
+        else {
+            console.log(inputTestAddress);
+        }
+    }
+
+    const validationCityRegexp = function (input) {
+        let inputTestCity = charRegexp.test(input.value);
+        if (inputTestCity) {
+            console.log('test validé');
+            console.log(inputTestCity);
+            return inputTestCity;
+        }
+        else {
+            console.log(inputTestCity);
+        }
+    }
+
+    const validationEmailRegexp = function (input) {
+        let inputTestemail = emailRegexp.test(input.value);
+        if (inputTestemail) {
+            console.log('test validé');
+            console.log(inputTestemail);
+            return inputTestemail;
+        }
+        else {
+            console.log(inputTestemail);
+        }
+    }
+}
+getForm();
 
 
 
