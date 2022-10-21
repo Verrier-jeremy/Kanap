@@ -155,119 +155,99 @@ else {
     displayCart();
 }
 
+//**************** fonction de vérification des données saisies par l'utilisateur**********
 
 function getForm() {
 
     // selection du formulaire
     let form = document.querySelector('.cart__order__form');
-    console.log(form.firstName);
-
-    //selection du boutton de validation du formulaire
-    /*let validForm = document.getElementById('order');
-    let formOK = false;
-
-    //Creation de la condition que le boutton est cliquable après que toutes les données rentrées soient validées par les regexp
-    validForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (formOK) {
-            console.log("formulaire valid");
-        }
-    })*/
 
     // Mise en place des différentes expressions régulières pour le formulaire
-    let charRegexp = new RegExp(`^[a-zA-Z ,.'-]+$`, 'g');
-    let emailRegexp = new RegExp(`^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$`, 'g');
-    let addressRegexp = new RegExp(`^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+$)`, 'g');
-
+    let charRegexp = new RegExp(`[a-zA-Zàâäéèêëïîôöùûüç ,.'-]+`, 'i');
+    let emailRegexp = new RegExp(`^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$`, 'i');
+    let addressRegexp = new RegExp(`^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç, ]+$)`, 'g');
 
     // test des differentes valeurs données dans le formulaire avec les Regexp
+    //Test du prénom avec le regexp char
     form.firstName.addEventListener('change', () => {
-        validationFirstNameRegexp(this);
+        let firstNameValidation = form.firstName;
+        let valueFirstNameValidation = firstNameValidation.value;
+        validationCharRegexp(valueFirstNameValidation, firstNameValidation);
     });
 
+    //Test du nom avec le regexp char
     form.lastName.addEventListener('change', () => {
-        validationLastNameRegexp(this);
+        let lastNameValidation = form.lastName;
+        let valueLastNameValidation = lastNameValidation.value;
+        validationCharRegexp(valueLastNameValidation, lastNameValidation);
     });
 
+    //Test de l'adresse avec le regexp adresse
     form.address.addEventListener('change', () => {
-        validationaddressRegexp(this);
+        let addressValidation = form.address;
+        let valueaddressValidation = addressValidation.value;
+        validationAddressRegexp(valueaddressValidation);
+        console.log(valueaddressValidation);
     });
 
+    //Test de la ville avec le regexp char
     form.city.addEventListener('change', () => {
-        validationCityRegexp(this);
+        let cityValidation = form.city;
+        let valueCityValidation = cityValidation.value;
+        console.log(valueCityValidation);
+        validationCharRegexp(valueCityValidation, cityValidation);
     });
 
+    //Test de l'email avec le regexp email
     form.email.addEventListener('change', () => {
-        validationEmailRegexp(this);
+        let emailValidation = form.email;
+        let valueEmailValidation = emailValidation.value;
+        validationEmailRegexp(valueEmailValidation);
     });
 
-    const validationFirstNameRegexp = function (inputName) {
-        let inputTestFirstName = charRegexp.test(inputName.value);
-        if (inputTestFirstName) {
-            console.log('test validé');
-            console.log(inputTestFirstName);
+    //Fonctions permettant de contrôler les valeurs saisies par l'utilisateur
+    //Fonction de test regexp char
+    function validationCharRegexp(input, Element){
+        let idElement = Element.id;
+        let inputTestChar = charRegexp.test(input);
+        let idParagrapheselector = idElement+"ErrorMsg";
+        if (inputTestChar) {
+            document.getElementById(idParagrapheselector).textContent = '';
+            
         }
         else {
-            console.log(inputTestFirstName);
+            document.getElementById(idParagrapheselector).textContent = 'Votre saisie doit contenir uniquement des lettres';
         }
-        return inputTestFirstName;
+        return inputTestChar;
     }
 
-    const validationLastNameRegexp = function (input) {
-        let inputTestLastName = charRegexp.test(input.value);
-        if (inputTestLastName) {
-            console.log('test validé');
-            console.log(inputTestLastName);
-            return inputTestLastName;
-        }
-        else {
-            console.log(inputTestLastName);
-        }
-
-    }
-
-    // function validationaddressRegexp(input){
-    const validationaddressRegexp = function (input) {
-        let inputTestAddress = addressRegexp.test(input.value);
+    //Fonction de test regexp adresse
+    function validationAddressRegexp(input){
+        let inputTestAddress = addressRegexp.test(input);
         if (inputTestAddress) {
-            console.log('test validé');
-            console.log(inputTestAddress);
-            return inputTestAddress;
+            document.getElementById('addressErrorMsg').textContent='';  
+            
         }
         else {
-            console.log(inputTestAddress);
+            document.getElementById('addressErrorMsg').textContent='Votre saisie n\'est pas valid ex: 28 rue des oiseaux';
         }
     }
 
-    const validationCityRegexp = function (input) {
-        let inputTestCity = charRegexp.test(input.value);
-        if (inputTestCity) {
-            console.log('test validé');
-            console.log(inputTestCity);
-            return inputTestCity;
+    //Fonction de test regexp email
+    function validationEmailRegexp(input){
+        let inputTestEmail = emailRegexp.test(input);
+        if (inputTestEmail) {
+            document.getElementById('emailErrorMsg').textContent='';
+            
+            
         }
         else {
-            console.log(inputTestCity);
+            document.getElementById('emailErrorMsg').textContent='Votre saisie n\'est pas valid ex: votreEmail@kanap.fr';
         }
     }
 
-    const validationEmailRegexp = function (input) {
-        let inputTestemail = emailRegexp.test(input.value);
-        if (inputTestemail) {
-            console.log('test validé');
-            console.log(inputTestemail);
-            return inputTestemail;
-        }
-        else {
-            console.log(inputTestemail);
-        }
-    }
+    
+
+    
 }
 getForm();
-
-
-
-
-
-
-
