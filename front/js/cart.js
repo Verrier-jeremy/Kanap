@@ -1,3 +1,4 @@
+
 let allCart = JSON.parse(localStorage.getItem("elementsCart"));
 
 if (allCart.length < 1) {
@@ -159,121 +160,151 @@ else {
 
 function getForm() {
 
-        // selection du formulaire
-        let form = document.querySelector('.cart__order__form');
+    // selection du formulaire
+    let form = document.querySelector('.cart__order__form');
 
-        // Mise en place des différentes expressions régulières pour le formulaire
-        let charRegexp = new RegExp(`[a-zA-Zàâäéèêëïîôöùûüç ,.'-]+`, 'i');
-        let emailRegexp = new RegExp(`^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$`, 'i');
-        let addressRegexp = new RegExp(`^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç, ]+$)`, 'g');
+    // Mise en place des différentes expressions régulières pour le formulaire
+    let charRegexp = new RegExp(`[a-zA-Zàâäéèêëïîôöùûüç ,.'-]+`, 'g');
+    let emailRegexp = new RegExp(`^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$`, 'g');
+    let addressRegexp = new RegExp(`^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç, ]+$)`, 'g');
 
-        // test des differentes valeurs données dans le formulaire avec les Regexp
-        //Test du prénom avec le regexp char
-        let validFirstName;
-        form.firstName.addEventListener('change', () => {
-            let firstNameValidation = form.firstName;
-            let valueFirstNameValidation = firstNameValidation.value;
-            validFirstName = validationCharRegexp(valueFirstNameValidation, firstNameValidation);console.log(validFirstName);
-        });
-        
+    // test des differentes valeurs données dans le formulaire avec les Regexp
+    //Test du prénom avec le regexp char
+    let validFirstName;
+    form.firstName.addEventListener('change', () => {
+        let firstNameValidation = form.firstName;
+        let valueFirstNameValidation = firstNameValidation.value;
+        validFirstName = validationCharRegexp(valueFirstNameValidation, firstNameValidation);
+        console.log(validFirstName);
+    });
 
-        //Test du nom avec le regexp char
-        let validLastName;
-        form.lastName.addEventListener('change', () => {
-            let lastNameValidation = form.lastName;
-            let valueLastNameValidation = lastNameValidation.value;
-            validLastName = validationCharRegexp(valueLastNameValidation, lastNameValidation);
-        });
+    //Test du nom avec le regexp char
+    let validLastName;
+    form.lastName.addEventListener('change', () => {
+        let lastNameValidation = form.lastName;
+        let valueLastNameValidation = lastNameValidation.value;
+        validLastName = validationCharRegexp(valueLastNameValidation, lastNameValidation);
+    });
 
-        //Test de l'adresse avec le regexp adresse
-        let validAddress;
-        form.address.addEventListener('change', () => {
-            let addressValidation = form.address;
-            let valueaddressValidation = addressValidation.value;
-            validAddress = validationAddressRegexp(valueaddressValidation);
-        });
+    //Test de l'adresse avec le regexp adresse
+    let validAddress;
+    form.address.addEventListener('change', () => {
+        let addressValidation = form.address;
+        let valueaddressValidation = addressValidation.value;
+        validAddress = validationAddressRegexp(valueaddressValidation);
+    });
 
-        //Test de la ville avec le regexp char
-        let validCity;
-        form.city.addEventListener('change', () => {
-            let cityValidation = form.city;
-            let valueCityValidation = cityValidation.value;
-            console.log(valueCityValidation);
-            validCity = validationCharRegexp(valueCityValidation, cityValidation);
-        });
+    //Test de la ville avec le regexp char
+    let validCity;
+    form.city.addEventListener('change', () => {
+        let cityValidation = form.city;
+        let valueCityValidation = cityValidation.value;
+        console.log(valueCityValidation);
+        validCity = validationCharRegexp(valueCityValidation, cityValidation);
+    });
 
-        //Test de l'email avec le regexp email
-        let validEmail;
-        form.email.addEventListener('change', () => {
-            let emailValidation = form.email;
-            let valueEmailValidation = emailValidation.value;
-            validEmail = validationEmailRegexp(valueEmailValidation);
-        });
+    //Test de l'email avec le regexp email
+    let validEmail;
+    form.email.addEventListener('change', () => {
+        let emailValidation = form.email;
+        let valueEmailValidation = emailValidation.value;
+        validEmail = validationEmailRegexp(valueEmailValidation);
+    });
 
-        //Fonctions permettant de contrôler les valeurs saisies par l'utilisateur
-        //Fonction de test regexp char
-        function validationCharRegexp(input, Element) {
-            let idElement = Element.id;
-            let inputTestChar = charRegexp.test(input);
-            let idParagrapheselector = idElement + "ErrorMsg";
-            if (inputTestChar) {
-                document.getElementById(idParagrapheselector).textContent = '';
-
-            }
-            else {
-                document.getElementById(idParagrapheselector).textContent = 'Votre saisie doit contenir uniquement des lettres';
-            }
-            return inputTestChar;
+    //Fonctions permettant de contrôler les valeurs saisies par l'utilisateur
+    //Fonction de test regexp char
+    function validationCharRegexp(input, Element) {
+        let idElement = Element.id;
+        let inputTestChar = charRegexp.test(input);
+        let idParagrapheselector = idElement + "ErrorMsg";
+        if (inputTestChar) {
+            document.getElementById(idParagrapheselector).textContent = '';
         }
-
-        //Fonction de test regexp adresse
-        function validationAddressRegexp(input) {
-            let inputTestAddress = addressRegexp.test(input);
-            if (inputTestAddress) {
-                document.getElementById('addressErrorMsg').textContent = '';
-            }
-            else {
-                document.getElementById('addressErrorMsg').textContent = 'Votre saisie n\'est pas valid ex: 28 rue des oiseaux';
-            }
-            return inputTestAddress;
+        else {
+            console.log(idElement, charRegexp, input )
+            document.getElementById(idParagrapheselector).textContent = 'Votre saisie doit contenir uniquement des lettres';
         }
-
-        //Fonction de test regexp email
-        function validationEmailRegexp(input) {
-            let inputTestEmail = emailRegexp.test(input);
-            if (inputTestEmail) {
-                document.getElementById('emailErrorMsg').textContent = '';
-            }
-            else {
-                document.getElementById('emailErrorMsg').textContent = 'Votre saisie n\'est pas valid ex: votreEmail@kanap.fr';
-            }
-            return inputTestEmail;
-        }
-
-        const btnValidate = document.getElementById('order');
-        btnValidate.addEventListener('click', (e) => {
-            e.preventDefault();
-    
-            if (validFirstName &&
-                validLastName &&
-                validAddress &&
-                validCity &&
-                validEmail
-                ) {
-                    
-                let contact = {
-                    firstName: document.querySelector("#firstName").value,
-                    lastName: document.querySelector("#lastName").value,
-                    address: document.querySelector("#address").value,
-                    city: document.querySelector("#city").value,
-                    email: document.querySelector("#email").value,
-                };
-    
-                console.log(contact);
-            }
-            else {
-                alert("Le formulaire n'est pas correctement rempli.\r Veuillez verifier vos saisies.")
-            }
-        });
+        return inputTestChar;
     }
+
+    //Fonction de test regexp adresse
+    function validationAddressRegexp(input) {
+        let inputTestAddress = addressRegexp.test(input);
+        if (inputTestAddress) {
+            document.getElementById('addressErrorMsg').textContent = '';
+        }
+        else {
+            document.getElementById('addressErrorMsg').textContent = 'Votre saisie n\'est pas valid ex: 28 rue des oiseaux';
+        }
+        return inputTestAddress;
+    }
+
+    //Fonction de test regexp email
+    function validationEmailRegexp(input) {
+        let inputTestEmail = emailRegexp.test(input);
+        if (inputTestEmail) {
+            document.getElementById('emailErrorMsg').textContent = '';
+        }
+        else {
+            document.getElementById('emailErrorMsg').textContent = 'Votre saisie n\'est pas valid ex: votreEmail@kanap.fr';
+        }
+        return inputTestEmail;
+    }
+
+    let products = allCart;
+    // condition pour valider la construction de l'objet contact avant de le POST
+    const btnValidate = document.getElementById('order');
+    btnValidate.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (validFirstName &&
+            validLastName &&
+            validAddress &&
+            validCity &&
+            validEmail
+        ) {
+            // Création de l'objet contact en récuperant toutes les saisies valides
+            let contact = {
+                firstName: document.querySelector("#firstName").value,
+                lastName: document.querySelector("#lastName").value,
+                address: document.querySelector("#address").value,
+                city: document.querySelector("#city").value,
+                email: document.querySelector("#email").value,
+            }
+            console.log(contact);
+            let products = allCart.map((item) => {
+                return item.id;})
+                console.log(products);
+            let allDataToPost = {contact, products};
+            let reqInit= {
+                method: "post",
+                headers: {
+                    ["Content-Type"]: "application/json"
+                },
+                body: JSON.stringify(allDataToPost)
+            };
+
+            fetch("http://localhost:3000/api/products/order", reqInit )           
+            .then(function (respons) {
+                return respons.json();
+            })
+            .then(function (kanap) {
+                console.log(kanap.orderId);
+                location.href="confirmation.html?orderId="+ kanap.orderId;
+            })
+
+             
+        } 
+        else {
+            alert("Le formulaire n'est pas correctement rempli.\r Veuillez verifier vos saisies.");
+        }
+    });
+}
+
+
 getForm();
+
+
+
+
+
+
