@@ -271,9 +271,13 @@ function getForm() {
                 email: document.querySelector("#email").value,
             }
             console.log(contact);
+
+            //création du tableau contenant uniquement les id des produit du panier
             let products = allCart.map((item) => {
                 return item.id;})
                 console.log(products);
+
+                
             let allDataToPost = {contact, products};
             let reqInit= {
                 method: "post",

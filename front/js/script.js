@@ -1,3 +1,4 @@
+// fonction fetch permettant de faire la demande au serveur pour récuperer un fichier en metedata
 async function fetchProducts() {
   await fetch("http://localhost:3000/api/products")
     .catch(function (error) {
@@ -11,6 +12,7 @@ async function fetchProducts() {
       const itemSection = document.querySelector(".items");
       console.log(datasucessresult);
 
+      //Mise en page de chaque objet retourné par le serveur
       for (let i = 0; i < datasucessresult.length; i++) {
         itemSection.innerHTML +=
           `<a href="./product.html?id=${datasucessresult[i]._id}">
