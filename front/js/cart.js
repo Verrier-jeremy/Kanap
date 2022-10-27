@@ -1,4 +1,4 @@
-
+// Récuperation de la liste de produit dans le localstorage
 let allCart = JSON.parse(localStorage.getItem("elementsCart"));
 
 if (allCart.length < 1) {
@@ -8,21 +8,27 @@ if (allCart.length < 1) {
 else {
     let allCartWithInfo = [];
 
+    // ***************   Fonction requete pour récuperer les données des produits dans le localstorage   ***************
     async function fetchProductInCart() {
         let promiseArray = [];
         for (let i = 0; i < allCart.length; i++) {
             promiseArray.push(new Promise((resolve) => {
                 fetch("http://localhost:3000/api/products/" + allCart[i].id)
+                    .catch(function (error) {
+                        console.log(error);
+                    })
                     .then(function (respons) {
                         return respons.json();
                     })
                     .then(function (cartResult) {
                         const dataCart = { ...cartResult, ...allCart[i] };
-                        /*const dataCart =[
+                        /*Equivalent ==> const dataCart =[
                             id:allCart[i].id,
                             color: allCart[i].color,
                             quantity: allCart[i].quantity,
-                            imageUrl
+                            imageUrl: cartResult.imageUrl,
+                            name: cartResult.name,
+                            etc ...
                         ]*/
                         resolve(dataCart);
                     })
@@ -34,6 +40,7 @@ else {
 
     }
 
+    // ***************   Fonction de mise en page des differents elements contenu dans le localstorage   ***************
     async function displayCart() {
         const results = await fetchProductInCart();
         allCartWithInfo = results;
@@ -43,7 +50,7 @@ else {
         let totalPrice = document.querySelector("#totalPrice");
         const elementCart = document.querySelector("#cart__items");
 
-
+        // Boucle permettant l'affichage de chaque element présent dans le localstorage
         for (let i = 0; i < allCartWithInfo.length; i++) {
             const id = allCart[i].id;
             const color = allCart[i].color;
@@ -54,7 +61,6 @@ else {
             price += allCartWithInfo[i].quantity * allCartWithInfo[i].price;
             totalQuantity.innerText = `${quantity}`;
             totalPrice.innerText = `${price}`;
-
 
             // Déclaration de la variable articleCart en créant un article avec le parent elementCart
             let articleCart = document.createElement('article');
@@ -112,6 +118,7 @@ else {
             inputQuantity.setAttribute("name", "itemQuantity");
             inputQuantity.value = allCartWithInfo[i].quantity;
 
+            // Attente d'un changement de saisie et mise à jour du localstorage du changement souhaité
             inputQuantity.addEventListener('change', (event) => {
 
                 let quantitySelectedValue = inputQuantity.value;
@@ -124,7 +131,6 @@ else {
 
             });
 
-
             // Déclaration de la variable inputQuantity en créant une input avec le parent cartSetting
             let deleteCartProduct = document.createElement('div');
             deleteCartProduct.classList.add('cart__item__content__settings__delete');
@@ -136,6 +142,7 @@ else {
             deleteProduct.innerText = 'supprimer';
             deleteCartProduct.appendChild(deleteProduct);
 
+            // Ecoute du clique sur le texte supprimer et suppression du produit dans la panier et la localstorage
             deleteProduct.addEventListener('click', () => {
 
                 let indexProduct = allCart.findIndex(item => item.id == id && item.color == color)
@@ -147,8 +154,8 @@ else {
                 articleCart.remove();
                 quantity -= productQuantity;
                 price -= productPrice * productQuantity;
-                totalQuantity -= `${quantity}`;
-                totalPrice.innerText = `${price}`;
+                totalQuantity.innerText = quantity;
+                totalPrice.innerText = price;
             })
         }
     }
@@ -156,8 +163,7 @@ else {
     displayCart();
 }
 
-//**************** fonction de vérification des données saisies par l'utilisateur**********
-
+//***************   Fonction vérifiantdes les données saisies par l'utilisateur   ***************
 function getForm() {
 
     // selection du formulaire
@@ -221,7 +227,7 @@ function getForm() {
             document.getElementById(idParagrapheselector).textContent = '';
         }
         else {
-            console.log(idElement, charRegexp, input )
+            console.log(idElement, charRegexp, input)
             document.getElementById(idParagrapheselector).textContent = 'Votre saisie doit contenir uniquement des lettres';
         }
         return inputTestChar;
@@ -274,12 +280,13 @@ function getForm() {
 
             //création du tableau contenant uniquement les id des produit du panier
             let products = allCart.map((item) => {
-                return item.id;})
-                console.log(products);
+                return item.id;
+            })
+            console.log(products);
 
-                
-            let allDataToPost = {contact, products};
-            let reqInit= {
+
+            let allDataToPost = { contact, products };
+            let reqInit = {
                 method: "post",
                 headers: {
                     ["Content-Type"]: "application/json"
@@ -287,17 +294,19 @@ function getForm() {
                 body: JSON.stringify(allDataToPost)
             };
 
-            fetch("http://localhost:3000/api/products/order", reqInit )           
-            .then(function (respons) {
-                return respons.json();
-            })
-            .then(function (kanap) {
-                console.log(kanap.orderId);
-                location.href="confirmation.html?orderId="+ kanap.orderId;
-            })
-
-             
-        } 
+            // Requete faite au serveur qui retourne l'id de commande avec l'action post 
+            fetch("http://localhost:3000/api/products/order", reqInit)
+                .catch(function (error) {
+                    console.log(error);
+                })
+                .then(function (respons) {
+                    return respons.json();
+                })
+                .then(function (kanap) {
+                    console.log(kanap.orderId);
+                    location.href = "confirmation.html?orderId=" + kanap.orderId;
+                })
+        }
         else {
             alert("Le formulaire n'est pas correctement rempli.\r Veuillez verifier vos saisies.");
         }

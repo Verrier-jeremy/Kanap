@@ -2,7 +2,7 @@
 const params = new URL(document.location).searchParams;
 const id = params.get("id")
 
-// fonction requete pour récupérer juste les élements néccessaire du produit cliqué
+//***************   fonction requete pour récupérer juste les élements néccessaire du produit cliqué   ***************
 async function fetchProductSelect() {
     await fetch("http://localhost:3000/api/products/" + id)
         .catch(function (error) {
@@ -13,7 +13,7 @@ async function fetchProductSelect() {
             return respons.json();
         })
 
-        // fonction permettant la mise en page du produit choisi avec ses differents choix 
+        //***************   fonction permettant la mise en page du produit choisi avec ses differents choix   ***************
         .then(function (objectresult) {
 
             const imageSection = document.querySelector(".item__img");
@@ -43,7 +43,7 @@ async function fetchProductSelect() {
         })
 }
 
-// fonction permattant la mise dans le localstorage de tout les elements du produit néccessaires pour la page panier.html
+//***************   fonction permattant la mise dans le localstorage de tout les elements du produit néccessaires pour la page panier.html   ***************
 function addToCart(quantity, color) {
     const newElements = {
         id: id,
@@ -58,7 +58,6 @@ function addToCart(quantity, color) {
         cartElements = [];
     }
     else {
-
         cartElements = JSON.parse(storedData);
 
         // Verification de doublon dans le localstorage
@@ -66,20 +65,15 @@ function addToCart(quantity, color) {
             console.log(cartElements[element]);
             if (cartElements[element].id == newElements.id && cartElements[element].color == newElements.color) {
                 console.log(element);
-                cartElements.splice(element,1);
+                cartElements.splice(element, 1);
             }
         }
     }
 
     // Ajout du nouveau produit dans le localstorage
     cartElements.push(newElements);
-
-
     localStorage.setItem("elementsCart", JSON.stringify(cartElements));
 }
-
-
-
 
 fetchProductSelect();
 

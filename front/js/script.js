@@ -1,4 +1,4 @@
-// fonction fetch permettant de faire la demande au serveur pour récuperer un fichier en metedata
+//***************   Fonction fetch permettant de faire la demande au serveur pour récuperer un fichier en metedata   ***************
 async function fetchProducts() {
   await fetch("http://localhost:3000/api/products")
     .catch(function (error) {
